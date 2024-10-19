@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ReserveSalleModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="reservation">
+    <Key>
+      <PropertyRef Name="id_r" />
+    </Key>
+    <Property Name="id_r" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="dateResrv" Type="date" Nullable="false" />
+    <Property Name="idU" Type="int" Nullable="false" />
+    <Property Name="idS" Type="int" Nullable="false" />
+    <Property Name="typeReser" Type="varchar" MaxLength="50" />
+    <Property Name="CIN" Type="varchar" MaxLength="50" />
+    <Property Name="nom" Type="varchar" MaxLength="50" />
+    <Property Name="prenom" Type="varchar" MaxLength="50" />
+    <Property Name="email" Type="varchar" MaxLength="255" />
+    <Property Name="tele" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="salle">
+    <Key>
+      <PropertyRef Name="id_s" />
+    </Key>
+    <Property Name="id_s" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="type" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="user">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="nom" Type="varchar" MaxLength="50" />
+    <Property Name="prenom" Type="varchar" MaxLength="50" />
+    <Property Name="email" Type="varchar" MaxLength="250" />
+    <Property Name="password" Type="varchar" MaxLength="50" />
+    <Property Name="numero" Type="bigint" />
+  </EntityType>
+  <Association Name="FK_reservation_reservation">
+    <End Role="salle" Type="Self.salle" Multiplicity="1" />
+    <End Role="reservation" Type="Self.reservation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="salle">
+        <PropertyRef Name="id_s" />
+      </Principal>
+      <Dependent Role="reservation">
+        <PropertyRef Name="idS" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_reservation_user">
+    <End Role="user" Type="Self.user" Multiplicity="1" />
+    <End Role="reservation" Type="Self.reservation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="user">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="reservation">
+        <PropertyRef Name="idU" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ReserveSalleModelStoreContainer">
+    <EntitySet Name="reservation" EntityType="Self.reservation" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="salle" EntityType="Self.salle" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="user" EntityType="Self.user" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_reservation_reservation" Association="Self.FK_reservation_reservation">
+      <End Role="salle" EntitySet="salle" />
+      <End Role="reservation" EntitySet="reservation" />
+    </AssociationSet>
+    <AssociationSet Name="FK_reservation_user" Association="Self.FK_reservation_user">
+      <End Role="user" EntitySet="user" />
+      <End Role="reservation" EntitySet="reservation" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ReserveSalleModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="reservation">
+    <Key>
+      <PropertyRef Name="id_r" />
+    </Key>
+    <Property Name="id_r" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="dateResrv" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="idU" Type="Int32" Nullable="false" />
+    <Property Name="idS" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="salle" Relationship="Self.FK_reservation_reservation" FromRole="reservation" ToRole="salle" />
+    <NavigationProperty Name="user" Relationship="Self.FK_reservation_user" FromRole="reservation" ToRole="user" />
+    <Property Name="typeReser" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CIN" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="nom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="prenom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="tele" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="salle">
+    <Key>
+      <PropertyRef Name="id_s" />
+    </Key>
+    <Property Name="id_s" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="reservation" Relationship="Self.FK_reservation_reservation" FromRole="salle" ToRole="reservation" />
+  </EntityType>
+  <EntityType Name="user">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="prenom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="email" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="reservation" Relationship="Self.FK_reservation_user" FromRole="user" ToRole="reservation" />
+    <Property Name="numero" Type="Int64" />
+  </EntityType>
+  <Association Name="FK_reservation_reservation">
+    <End Role="salle" Type="Self.salle" Multiplicity="1" />
+    <End Role="reservation" Type="Self.reservation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="salle">
+        <PropertyRef Name="id_s" />
+      </Principal>
+      <Dependent Role="reservation">
+        <PropertyRef Name="idS" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_reservation_user">
+    <End Role="user" Type="Self.user" Multiplicity="1" />
+    <End Role="reservation" Type="Self.reservation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="user">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="reservation">
+        <PropertyRef Name="idU" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ReserveSalleEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="reservation" EntityType="Self.reservation" />
+    <EntitySet Name="salle" EntityType="Self.salle" />
+    <EntitySet Name="user" EntityType="Self.user" />
+    <AssociationSet Name="FK_reservation_reservation" Association="Self.FK_reservation_reservation">
+      <End Role="salle" EntitySet="salle" />
+      <End Role="reservation" EntitySet="reservation" />
+    </AssociationSet>
+    <AssociationSet Name="FK_reservation_user" Association="Self.FK_reservation_user">
+      <End Role="user" EntitySet="user" />
+      <End Role="reservation" EntitySet="reservation" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
